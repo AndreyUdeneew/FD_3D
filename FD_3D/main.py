@@ -53,16 +53,19 @@ def processing():
     imRed = cv2.imdecode(np.fromfile(fileNameRed, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
     imRed = cv2.cvtColor(imRed, cv2.COLOR_BGR2RGB)
     imRed = imRed[:, :, 1]  # 2 for Nikita, 0 for Inessa
+    imRed = imadjustAuto(imRed)
     # cv2.imshow('Red', imRed)
 
     imGLED = cv2.imdecode(np.fromfile(fileNameGLED, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
     imGLED = cv2.cvtColor(imGLED, cv2.COLOR_BGR2RGB)
     imGLED = imGLED[:, :, 1]  # 2 for Nikita, 0 for Inessa
+    imGLED = imadjustAuto(imGLED)
     # cv2.imshow('GLED', imGLED)
 
     imRLED = cv2.imdecode(np.fromfile(fileNameRLED, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
     imRLED = cv2.cvtColor(imRLED, cv2.COLOR_BGR2RGB)
     imRLED = imRLED[:, :, 1]  # 2 for Nikita, 0 for Inessa
+    imRLED = imadjustAuto(imRLED)
     # cv2.imshow('RLED', imRLED)
 
     plt.contourf(X, Y, imRed, offset=0, cmap=plt.get_cmap('rainbow'))
@@ -77,6 +80,24 @@ def processing():
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
+def imadjustAuto(x):
+    # Similar to imadjust in MATLAB.
+    # Converts an image range from [a,b] to [c,d].
+    # The Equation of a line can be used for this transformation:
+    #   y=((d-c)/(b-a))*(x-a)+c
+    # However, it is better to use a more generalized equation:
+    #   y=((x-a)/(b-a))^gamma*(d-c)+c
+    # If gamma is equal to 1, then the line equation is used.
+    # When gamma is not equal to 1, then the transformation is not linear.
+    gamma = 1.0
+    a = np.min(x)
+    b = np.max(x)
+    c = 0.0
+    d = 255.0
+
+    y = (((x - a) / (b - a)) ** gamma) * (d - c) + c
+    # y = (cv2.divide((cv2.subtract(x,a)),(cv2.subtract(b,a)),dtype=np.uint8) ** gamma) * (d - c) + c
+    return y
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
