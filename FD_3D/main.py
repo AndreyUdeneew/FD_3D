@@ -1,6 +1,7 @@
 # This is a sample Python script.
 from mpl_toolkits.mplot3d import Axes3D
 from tkinter import *
+import cv2
 from tkinter import filedialog
 from tkinter.filedialog import *
 import numpy as np
@@ -11,19 +12,29 @@ import matplotlib.patches as patches
 def openRed():
     global fileNameRed
     fileNameRed = askopenfilenames(parent=window)
+    imRed = cv2.imdecode(np.fromfile(fileNameRed, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
+    imRed = cv2.cvtColor(imRed, cv2.COLOR_BGR2RGB)
+    imRed = imRed[:, :, 1]  # 2 for Nikita, 0 for Inessa
     return
 
 def openGLED():
     global fileNameGLED
     fileNameGLED = askopenfilenames(parent=window)
+    imGLED = cv2.imdecode(np.fromfile(fileNameGLED, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
+    imGLED = cv2.cvtColor(imGLED, cv2.COLOR_BGR2RGB)
+    imGLED = imGLED[:, :, 1]  # 2 for Nikita, 0 for Inessa
     return
 
 def openRLED():
     global fileNameRLED
     fileNameRLED = askopenfilenames(parent=window)
+    imRLED = cv2.imdecode(np.fromfile(fileNameRLED, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
+    imRLED = cv2.cvtColor(imRLED, cv2.COLOR_BGR2RGB)
+    imRLED = imRLED[:, :, 1]  # 2 for Nikita, 0 for Inessa
     return
 
 def processing():
+    global imRed, imGLED, imRLED
     fig    = plt.figure()
     ax     = fig.add_subplot(projection='3d')
 
