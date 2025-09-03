@@ -6,7 +6,7 @@ from matplotlib.path import Path
 import matplotlib.patches as patches
 
 fig    = plt.figure()
-ax     = fig.gca(projection='3d')
+ax     = fig.add_subplot(projection='3d')
 
 x      = np.linspace(0, 1, 100)
 X, Y   = np.meshgrid(x, x)
